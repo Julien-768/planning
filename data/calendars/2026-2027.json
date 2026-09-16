@@ -1,0 +1,46 @@
+{
+  "annee": "2026-2027",
+  "debut_annee": "2026-09-01",
+  "fin_annee": "2027-07-02",
+  "zones": {
+    "A": {
+      "label": "Zone A",
+      "academies": "Besançon, Bordeaux, Clermont-Ferrand, Dijon, Grenoble, Limoges, Lyon, Poitiers",
+      "periodes": [
+        {"nom": "Toussaint",  "debut": "2026-10-17", "fin": "2026-11-02"},
+        {"nom": "Noël",       "debut": "2026-12-19", "fin": "2027-01-04"},
+        {"nom": "Hiver",      "debut": "2027-02-13", "fin": "2027-03-01"},
+        {"nom": "Printemps",  "debut": "2027-04-10", "fin": "2027-04-26"}
+      ]
+    },
+    "B": {
+      "label": "Zone B",
+      "academies": "Aix-Marseille, Amiens, Lille, Nancy-Metz, Nantes, Nice, Normandie, Orléans-Tours, Reims, Rennes, Strasbourg",
+      "periodes": [
+        {"nom": "Toussaint",  "debut": "2026-10-17", "fin": "2026-11-02"},
+        {"nom": "Noël",       "debut": "2026-12-19", "fin": "2027-01-04"},
+        {"nom": "Hiver",      "debut": "2027-02-20", "fin": "2027-03-08"},
+        {"nom": "Printemps",  "debut": "2027-04-17", "fin": "2027-05-03"}
+      ]
+    },
+    "C": {
+      "label": "Zone C",
+      "academies": "Créteil, Montpellier, Paris, Toulouse, Versailles",
+      "periodes": [
+        {"nom": "Toussaint",  "debut": "2026-10-17", "fin": "2026-11-02"},
+        {"nom": "Noël",       "debut": "2026-12-19", "fin": "2027-01-04"},
+        {"nom": "Hiver",      "debut": "2027-02-06", "fin": "2027-02-22"},
+        {"nom": "Printemps",  "debut": "2027-04-03", "fin": "2027-04-19"}
+      ]
+    }
+  },
+  "feries": [
+    {"id": "armistice", "date": "2026-11-11", "nom": "11 novembre"},
+    {"id": "paques",    "date": "2027-03-29", "nom": "Lundi de Pâques"},
+    {"id": "travail",   "date": "2027-05-01", "nom": "1er mai"},
+    {"id": "ascension", "date": "2027-05-06", "nom": "Ascension"},
+    {"id": "pont",      "date": "2027-05-07", "nom": "Pont de l'Ascension"},
+    {"id": "victoire",  "date": "2027-05-08", "nom": "8 mai"},
+    {"id": "pentecote", "date": "2027-05-17", "nom": "Lundi de Pentecôte"}
+  ]
+}
