@@ -1,123 +1,97 @@
-# Planning activités hors vacances scolaires
+# Planning activités — version Flutter/Dart
 
-Génère un agenda `.ics` par activité extrascolaire, en retirant automatiquement
-les séances qui tombent pendant les vacances scolaires (zones A, B, C) et, au
-choix, les jours fériés. Les fichiers s'importent tels quels dans Google
-Agenda, Outlook ou Apple Calendrier.
+Réécriture en Dart du projet Python `planning-activites`, pour pouvoir
+compiler vers Android, le web, et Windows depuis la même base de code.
+
+## ⚠️ Avant toute chose : à vérifier de votre côté
+
+Ce code a été écrit sans pouvoir compiler ni lancer `flutter analyze` /
+`flutter test` — l'environnement qui l'a généré n'a pas le SDK Flutter
+installé. La logique a été relue attentivement et suit fidèlement le
+comportement du projet Python (mêmes règles de calcul, mêmes tests), mais
+la toute première chose à faire en ouvrant ce projet est :
+
+```bash
+flutter pub get
+flutter analyze
+flutter test
+```
+
+`flutter analyze` signalera immédiatement toute erreur de syntaxe ou d'API
+(les noms de paramètres des widgets Flutter changent parfois d'une version
+à l'autre). `flutter test` vérifie que le calcul des séances se comporte
+comme attendu — ce sont les mêmes cas que `tests/test_scheduler.py` côté
+Python.
+
+## Prérequis
+
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (inclut Dart)
+- Pour Android : Android Studio + SDK Android
+- Pour Windows : rien de plus, `flutter build windows` fonctionne avec Flutter seul sous Windows
+
+Vérifiez votre installation :
+```bash
+flutter doctor
+```
 
 ## Structure du projet
 
 ```
-planning-activites/
-├── data/calendars/2026-2027.json   ← dates de vacances, à dupliquer chaque année
-├── planning_scolaire/               ← cœur métier, sans dépendance externe
-│   ├── calendrier.py                   charge le JSON, calcule les jours exclus
-│   ├── activites.py                    modèle Activite + calcul des séances
-│   ├── ics.py                          génère les fichiers .ics et le .zip
-│   └── cli.py                          interface en ligne de commande
-├── webapp/                          ← façade web Flask (réutilise le cœur ci-dessus)
-│   ├── app.py
-│   ├── templates/index.html
-│   └── static/{style.css,app.js}
-├── exemples/activites.json          ← exemple pour la CLI
-└── tests/test_scheduler.py
+planning_activites_flutter/
+├── assets/calendars/2026-2027.json  ← mêmes données que le projet Python
+├── lib/
+│   ├── models/                         cœur métier, Dart pur (sans Flutter)
+│   │   ├── calendrier_scolaire.dart       zones, périodes, fériés
+│   │   └── activite.dart                  Activite + calcul des séances
+│   ├── services/
+│   │   ├── calendrier_loader.dart         charge le JSON (seul fichier Flutter du cœur)
+│   │   ├── ics_service.dart               génère .ics et .zip, Dart pur
+│   │   ├── export_service.dart            enregistre via la boîte de dialogue native
+│   │   └── sauvegarde_service.dart        sauvegarde locale + export/import .json
+│   ├── widgets/                        composants d'interface réutilisables
+│   ├── screens/accueil_screen.dart     écran principal
+│   └── main.dart
+└── test/scheduler_test.dart          tests du cœur métier
 ```
 
-Le cœur métier (`planning_scolaire/`) ne connaît ni Flask ni le web : c'est ce
-qui le rend facile à réutiliser (CLI, app web, script planifié, futur bot...).
+Comme côté Python, `models/` et `services/ics_service.dart` ne dépendent
+pas de Flutter — testables indépendamment de l'interface.
 
-## Installation
+## Lancer l'application
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+flutter run -d chrome     # dans le navigateur
+flutter run -d windows    # application Windows native
+flutter run                # choisit un appareil/émulateur Android connecté
 ```
 
-## Utilisation en ligne de commande
+## Générer les livrables
 
 ```bash
-python -m planning_scolaire.cli --zone B --activites exemples/activites.json --sortie mes_agendas/
+flutter build apk --release       # build/app/outputs/flutter-apk/app-release.apk
+flutter build web                 # build/web/  (à servir via un serveur HTTP, voir ci-dessous)
+flutter build windows --release   # build/windows/x64/runner/Release/
 ```
 
-Options :
-- `--zone` : `A`, `B` ou `C`
-- `--annee` : ex. `2026-2027` (par défaut, la plus récente disponible)
-- `--activites` : fichier JSON (voir `exemples/activites.json`)
-- `--sortie` : dossier où écrire les `.ics`
-- `--annees-disponibles` : liste les calendriers connus
-
-## Lancer l'application web
-
+Pour tester la version web localement sans tout héberger :
 ```bash
-python webapp/app.py
+cd build/web && python3 -m http.server
 ```
 
-Puis ouvrir `http://localhost:5000`.
+## Ajouter une nouvelle année scolaire
 
-## Ajouter une nouvelle année scolaire (l'automatisation demandée)
+1. Copier `assets/calendars/2026-2027.json` en `assets/calendars/2027-2028.json`, mettre à jour les dates.
+2. Déclarer le nouveau fichier dans `pubspec.yaml` sous `flutter: assets:`.
+3. Ajouter `'2027-2028'` à la liste `anneesDisponibles` dans `lib/services/calendrier_loader.dart`.
 
-Aucune ligne de code à modifier. Dès la publication du calendrier officiel
-d'une nouvelle année :
+## Différences avec la version Python
 
-1. Copier `data/calendars/2026-2027.json` en `data/calendars/2027-2028.json`.
-2. Mettre à jour les dates (`debut_annee`, `fin_annee`, `periodes`, `feries`).
-3. C'est tout — la CLI et l'app web listent automatiquement les fichiers
-   présents dans `data/calendars/`.
-
-On peut aller plus loin et automatiser entièrement cette étape avec une tâche
-planifiée (cron, GitHub Actions) qui récupère le fichier `.ics` officiel du
-ministère (`data.education.gouv.fr`) et le convertit en JSON — c'est le seul
-morceau qui demanderait un peu de code si vous voulez zéro intervention
-manuelle d'une année sur l'autre.
-
-## Pistes de monétisation
-
-L'app web (`webapp/app.py`) contient un exemple minimal de plafond gratuit
-(2 activités) débloqué par un code (`CODE_PREMIUM`). C'est un point de départ,
-pas une solution de production. Pour aller plus loin, dans l'ordre de
-complexité croissante :
-
-1. **Lien de paiement simple** (Stripe Payment Link, Gumroad, Lemon Squeezy) :
-   vendre un « code premium » à usage unique, saisi dans le formulaire. Zéro
-   backend de paiement à écrire.
-2. **Stripe Checkout + webhook** : générer un code à la volée après paiement
-   confirmé, le stocker (SQLite suffit au départ), le vérifier côté serveur.
-3. **Compte utilisateur + abonnement** : utile si vous voulez proposer un
-   renouvellement automatique chaque année scolaire plutôt qu'un achat ponctuel
-   — pertinent puisque le produit a une vraie logique d'usage annuel.
-
-Dans tous les cas, remplacer `app.secret_key` et la vérification de code par
-une implémentation réelle avant toute mise en ligne publique.
-
-## Tests
-
-```bash
-python tests/test_scheduler.py
-```
-
-## Fonctionnalités de l'app web
-
-- **Périodes de vacances affichées** : le formulaire liste les dates de
-  chaque période de vacances pour la zone choisie, sous les activités.
-  Elles se rafraîchissent automatiquement si vous changez de zone ou d'année.
-- **Sauvegarde / restauration** : un bouton « Exporter (.json) » télécharge
-  l'état complet du formulaire (zone, année, fériés cochés, activités) dans
-  un fichier. Le bouton « Importer une sauvegarde » recharge ce fichier dans
-  le formulaire. Le navigateur conserve aussi automatiquement une copie
-  locale (`localStorage`) : fermer l'onglet par erreur ne fait rien perdre.
-  Ce même fichier de sauvegarde est directement réutilisable en ligne de
-  commande :
-
-  ```bash
-  python -m planning_scolaire.cli --activites sauvegarde-activites.json --sortie mes_agendas/
-  ```
-
-  (La CLI lit la zone, l'année et les fériés directement depuis le fichier ;
-  `--zone`/`--annee` restent disponibles pour les surcharger.)
-
-## Limites connues
-
-- Corse et outre-mer suivent des calendriers spécifiques, non couverts ici.
-- Les interruptions propres à une association (stage, compétition) ne sont
-  pas gérées : à ajouter manuellement dans le calendrier après import.
+- Le calcul des séances et la génération `.ics` suivent exactement la même
+  logique (mêmes tests, mêmes cas limites).
+- Le format de sauvegarde `.json` exporté est compatible avec celui de la
+  CLI Python (`planning_scolaire/cli.py`) : les champs sont identiques.
+- Il n'y a pas d'équivalent du plafond "gratuit / premium" de l'app Flask
+  ici — à ajouter si vous voulez reproduire cette logique de monétisation
+  dans l'appli mobile/desktop.
+- La persistance automatique utilise `shared_preferences` (équivalent du
+  `localStorage` du navigateur) plutôt qu'un fichier sur disque.

@@ -1,2 +1,25 @@
-/mes_agendas
-/venv
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+*.iml
+.idea/
+android/.gradle/
+android/app/debug
+android/app/profile
+android/app/release
+# Widget Preview related
+.widget_preview/
+lib/main.dart
+lib/models/activite.dart
+lib/models/calendrier_scolaire.dart
+lib/screens/accueil_screen.dart
+lib/services/calendrier_loader.dart
+lib/services/export_service.dart
+lib/services/ics_service.dart
+lib/services/sauvegarde_service.dart
+lib/widgets/activite_form.dart
+lib/widgets/periodes_table.dart
