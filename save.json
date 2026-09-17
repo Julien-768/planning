@@ -1,0 +1,56 @@
+{
+    "zone": "B",
+    "annee": "2026-2027",
+    "feries": [
+        "armistice",
+        "paques",
+        "ascension",
+        "pont",
+        "victoire",
+        "pentecote"
+    ],
+    "activites": [
+        {
+            "nom": "Solfège - Formation Musicale",
+            "jour": "2",
+            "heure_debut": "10:30",
+            "heure_fin": "11:30",
+            "lieu": "EMK - Truchtersheim"
+        },
+        {
+            "nom": "Chorale - Choeur Enfants ",
+            "jour": "2",
+            "heure_debut": "14:00",
+            "heure_fin": "14:45",
+            "lieu": "EMK - Truchtersheim"
+        },
+        {
+            "nom": "Solfège",
+            "jour": "2",
+            "heure_debut": "10:30",
+            "heure_fin": "11:30",
+            "lieu": "EMK - Truchtersheim"
+        },
+        {
+            "nom": "Trajet - Saverne - Aller",
+            "jour": "1",
+            "heure_debut": "18:25",
+            "heure_fin": "18:55",
+            "lieu": ""
+        },
+        {
+            "nom": "Gymnastique - Access 8-9",
+            "jour": "1",
+            "heure_debut": "19:00",
+            "heure_fin": "20:15",
+            "lieu": "Saverne - Gymnasme Adrien Zeller"
+        },
+        {
+            "nom": "Trajet - Saverne - Retour",
+            "jour": "1",
+            "heure_debut": "20:15",
+            "heure_fin": "20:45",
+            "lieu": ""
+        }
+    ]
+}
