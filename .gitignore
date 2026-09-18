@@ -1,2 +1,19 @@
-/mes_agendas
-/venv
+# Environnements Python
+venv/
+.venv/
+
+# Cache Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Sorties générées localement
+/agendas/
+/mes_agendas/
+.tmp/
+
+# Éditeurs / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
