@@ -29,9 +29,15 @@
     </section>
 
     <section>
-      <h2>Activités <span class="hint">({{ limite_gratuite }} gratuites, sans limite avec un code</span></h2>
+      <h2>Activités</h2>
       <div id="activites"></div>
       <button type="button" id="ajouter" class="btn-ghost">Ajouter une activité</button>
+    </section>
+
+    <section>
+      <h2>Aperçu d'une semaine type</h2>
+      <p class="hint-bloc">Vue d'ensemble d'une semaine sans vacances ni jour férié — pour repérer les chevauchements entre activités.</p>
+      <div id="calendrier-semaine" class="semaine"></div>
     </section>
 
     <section>
@@ -46,11 +52,6 @@
         <label><input type="checkbox" name="ferie" value="{{ f.id }}" checked> {{ f.nom }} — {{ f.date }}</label>
         {% endfor %}
       </div>
-    </section>
-
-    <section>
-      <h2>Code premium (facultatif)</h2>
-      <input type="text" name="code" placeholder="Laissez vide pour la version gratuite">
     </section>
 
     <section class="sauvegarde">
@@ -73,7 +74,7 @@
 <template id="modele-activite">
   <div class="act">
     <div class="act-grid">
-      <label>Activité<input type="text" name="nom" placeholder="Judo, solfège…" required></label>
+      <label class="champ-large">Activité<input type="text" name="nom" placeholder="Judo, solfège…" required></label>
       <label>Jour
         <select name="jour">
           <option value="0">Lundi</option><option value="1">Mardi</option>
@@ -83,8 +84,11 @@
       </label>
       <label>Début<input type="time" name="heure_debut" value="17:00" required></label>
       <label>Fin<input type="time" name="heure_fin" value="18:00" required></label>
-      <label>Lieu<input type="text" name="lieu" placeholder="Facultatif"></label>
+      <label class="champ-large">Lieu<input type="text" name="lieu" placeholder="Facultatif"></label>
+      <label>1<sup>re</sup> séance (facultatif)<input type="date" name="premiere_seance"></label>
+      <label>Dernière séance (facultatif)<input type="date" name="derniere_seance"></label>
     </div>
+    <p class="hint-bloc hint-dates">Laissez ces deux dates vides pour que l'activité coure sur toute l'année scolaire.</p>
     <button type="button" class="btn-link supprimer">Supprimer</button>
   </div>
 </template>

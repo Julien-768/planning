@@ -71,25 +71,6 @@ ministère (`data.education.gouv.fr`) et le convertit en JSON — c'est le seul
 morceau qui demanderait un peu de code si vous voulez zéro intervention
 manuelle d'une année sur l'autre.
 
-## Pistes de monétisation
-
-L'app web (`webapp/app.py`) contient un exemple minimal de plafond gratuit
-(2 activités) débloqué par un code (`CODE_PREMIUM`). C'est un point de départ,
-pas une solution de production. Pour aller plus loin, dans l'ordre de
-complexité croissante :
-
-1. **Lien de paiement simple** (Stripe Payment Link, Gumroad, Lemon Squeezy) :
-   vendre un « code premium » à usage unique, saisi dans le formulaire. Zéro
-   backend de paiement à écrire.
-2. **Stripe Checkout + webhook** : générer un code à la volée après paiement
-   confirmé, le stocker (SQLite suffit au départ), le vérifier côté serveur.
-3. **Compte utilisateur + abonnement** : utile si vous voulez proposer un
-   renouvellement automatique chaque année scolaire plutôt qu'un achat ponctuel
-   — pertinent puisque le produit a une vraie logique d'usage annuel.
-
-Dans tous les cas, remplacer `app.secret_key` et la vérification de code par
-une implémentation réelle avant toute mise en ligne publique.
-
 ## Tests
 
 ```bash
@@ -101,13 +82,25 @@ python tests/test_scheduler.py
 - **Périodes de vacances affichées** : le formulaire liste les dates de
   chaque période de vacances pour la zone choisie, sous les activités.
   Elles se rafraîchissent automatiquement si vous changez de zone ou d'année.
+- **Dates de début/fin par activité** : chaque activité peut avoir sa propre
+  première et dernière séance (facultatif). Utile pour une activité qui ne
+  démarre pas à la rentrée (inscriptions plus tardives) ou qui se termine
+  avant la fin de l'année (stage, cycle court). Laissées vides, l'activité
+  court sur toute l'année scolaire — comportement déjà présent dans
+  `planning_scolaire/activites.py` et la CLI, simplement exposé dans le
+  formulaire web.
+- **Aperçu d'une semaine type** : un calendrier hebdomadaire (lundi à
+  dimanche) se construit en direct au fur et à mesure que vous remplissez
+  les activités, pour repérer visuellement les chevauchements d'horaires.
+  Cet aperçu ne tient pas compte des vacances — c'est une vue "semaine de
+  classe normale", pas un calendrier daté.
 - **Sauvegarde / restauration** : un bouton « Exporter (.json) » télécharge
-  l'état complet du formulaire (zone, année, fériés cochés, activités) dans
-  un fichier. Le bouton « Importer une sauvegarde » recharge ce fichier dans
-  le formulaire. Le navigateur conserve aussi automatiquement une copie
-  locale (`localStorage`) : fermer l'onglet par erreur ne fait rien perdre.
-  Ce même fichier de sauvegarde est directement réutilisable en ligne de
-  commande :
+  l'état complet du formulaire (zone, année, fériés cochés, activités, avec
+  leurs dates de début/fin) dans un fichier. Le bouton « Importer une
+  sauvegarde » recharge ce fichier dans le formulaire. Le navigateur
+  conserve aussi automatiquement une copie locale (`localStorage`) : fermer
+  l'onglet par erreur ne fait rien perdre. Ce même fichier de sauvegarde est
+  directement réutilisable en ligne de commande :
 
   ```bash
   python -m planning_scolaire.cli --activites sauvegarde-activites.json --sortie mes_agendas/

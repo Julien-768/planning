@@ -4,7 +4,7 @@
 }
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:system-ui,sans-serif;margin:0}
-.wrap{max-width:760px;margin:0 auto;padding:32px 20px 72px}
+.wrap{max-width:920px;margin:0 auto;padding:32px 20px 72px}
 h1{font-size:2rem;margin:0 0 .3em}
 .lede{color:var(--ink-soft);margin:0 0 28px}
 section{margin-top:32px}
@@ -14,7 +14,10 @@ h2{font-size:1.1rem}
 label{display:block;font-size:.8rem;color:var(--ink-soft);margin-bottom:4px}
 input,select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:2px;background:var(--field);color:var(--ink)}
 .act{background:var(--field);border:1px solid var(--line);border-radius:3px;padding:14px;margin-bottom:10px}
-.act-grid{display:grid;grid-template-columns:2fr 1fr .8fr .8fr 1.2fr;gap:10px}
+.act-grid{display:flex;flex-wrap:wrap;gap:10px}
+.act-grid label{flex:1 1 120px}
+.act-grid label.champ-large{flex:2 1 200px}
+.hint-dates{margin:6px 0 0;font-size:.76rem}
 .fer{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem}
 .fer label{display:flex;gap:6px;align-items:center;background:var(--field);border:1px solid var(--line);padding:6px 10px;border-radius:2px}
 button{font:inherit;cursor:pointer}
@@ -31,3 +34,20 @@ button{font:inherit;cursor:pointer}
 .row-btns{display:flex;gap:10px;flex-wrap:wrap}
 .btn-file{position:relative;display:inline-block}
 .status{font-size:.85rem;color:var(--ink-soft);min-height:1.3em;margin-top:8px}
+
+.semaine{overflow-x:auto;background:var(--field);border:1px solid var(--line);border-radius:3px;padding:12px}
+.semaine-vide{color:var(--ink-soft);font-size:.85rem;margin:0;padding:8px 0}
+.semaine-grille{display:flex;min-width:640px}
+.heures-colonne{flex:0 0 40px;position:relative}
+.heures-corps{position:relative}
+.heure-etiquette{position:absolute;left:0;transform:translateY(-50%);font-size:.7rem;color:var(--ink-soft)}
+.jour-colonne{flex:1 1 0;min-width:80px;border-left:1px solid var(--line)}
+.jour-entete{font-size:.78rem;font-weight:600;text-align:center;padding-bottom:6px;color:var(--ink)}
+.jour-corps{position:relative;background:repeating-linear-gradient(to bottom, transparent 0, transparent 65.9px, var(--paper) 66px, var(--paper) 66.6px)}
+.bloc-activite{
+  position:absolute;left:2px;right:2px;
+  background:var(--school);color:#fff;border-radius:2px;
+  padding:2px 5px;font-size:.68rem;line-height:1.25;overflow:hidden;
+}
+.bloc-activite b{display:block;font-weight:600}
+.bloc-activite span{opacity:.85}

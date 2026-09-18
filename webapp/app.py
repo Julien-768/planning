@@ -13,10 +13,10 @@ aucune logique métier n'est dupliquée ici.
 from __future__ import annotations
 
 import sys
-from datetime import time
+from datetime import date, time
 from pathlib import Path
 
-from flask import Flask, render_template, request, send_file, session
+from flask import Flask, render_template, request, send_file
 import io
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -26,16 +26,6 @@ from planning_scolaire.calendrier import CalendrierScolaire
 from planning_scolaire.ics import generer_zip, generer_ics, slugifier
 
 app = Flask(__name__)
-app.secret_key = "change-moi-en-production"  # nécessaire seulement pour la limite gratuite ci-dessous
-
-# ---------------------------------------------------------------------------
-# Piste de monétisation la plus simple : un plafond gratuit, débloqué par un
-# lien de paiement (Stripe Payment Link, Gumroad, Lemon Squeezy...). Le champ
-# "code" du formulaire vaut jeton de déblocage ; à remplacer par une vraie
-# vérification (webhook Stripe, base d'utilisateurs) avant mise en production.
-# ---------------------------------------------------------------------------
-LIMITE_ACTIVITES_GRATUITES = 2
-CODE_PREMIUM = "PREMIUM2027"  # exemple — à remplacer par une vérification réelle
 
 
 @app.route("/", methods=["GET"])
@@ -49,7 +39,6 @@ def accueil():
         annee_defaut=annee_defaut,
         zones=["A", "B", "C"],
         feries=calendrier_apercu.feries_hors_vacances() if calendrier_apercu else [],
-        limite_gratuite=LIMITE_ACTIVITES_GRATUITES,
     )
 
 
@@ -79,21 +68,14 @@ def generer():
     form = request.form
     zone = form["zone"]
     annee = form["annee"]
-    code = form.get("code", "").strip()
-    est_premium = code == CODE_PREMIUM
 
     noms = form.getlist("nom")
     jours = form.getlist("jour")
     debuts = form.getlist("heure_debut")
     fins = form.getlist("heure_fin")
     lieux = form.getlist("lieu")
-
-    if not est_premium and len(noms) > LIMITE_ACTIVITES_GRATUITES:
-        noms = noms[:LIMITE_ACTIVITES_GRATUITES]
-        jours = jours[:LIMITE_ACTIVITES_GRATUITES]
-        debuts = debuts[:LIMITE_ACTIVITES_GRATUITES]
-        fins = fins[:LIMITE_ACTIVITES_GRATUITES]
-        lieux = lieux[:LIMITE_ACTIVITES_GRATUITES]
+    premieres = form.getlist("premiere_seance")
+    dernieres = form.getlist("derniere_seance")
 
     feries_actifs = set(form.getlist("ferie"))
 
@@ -104,8 +86,12 @@ def generer():
             heure_debut=time.fromisoformat(hd),
             heure_fin=time.fromisoformat(hf),
             lieu=lieu,
+            premiere_seance=date.fromisoformat(premiere) if premiere else None,
+            derniere_seance=date.fromisoformat(derniere) if derniere else None,
         )
-        for nom, jour, hd, hf, lieu in zip(noms, jours, debuts, fins, lieux)
+        for nom, jour, hd, hf, lieu, premiere, derniere in zip(
+            noms, jours, debuts, fins, lieux, premieres, dernieres
+        )
         if nom.strip()
     ]
 
