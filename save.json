@@ -25,10 +25,10 @@
             "lieu": "EMK - Truchtersheim"
         },
         {
-            "nom": "Solfège",
+            "nom": "Piano",
             "jour": "2",
-            "heure_debut": "10:30",
-            "heure_fin": "11:30",
+            "heure_debut": "10:00",
+            "heure_fin": "10:30",
             "lieu": "EMK - Truchtersheim"
         },
         {
@@ -51,6 +51,41 @@
             "heure_debut": "20:15",
             "heure_fin": "20:45",
             "lieu": ""
+        },
+        {
+            "nom": "Natation - EN3",
+            "jour": "3",
+            "heure_debut": "18:45",
+            "heure_fin": "19:45",
+            "lieu": "Piscine de la Kibitzeneau"
+        },
+        {
+            "nom": "Natation - EN1",
+            "jour": "3",
+            "heure_debut": "18:45",
+            "heure_fin": "19:30",
+            "lieu": "Piscine de la Kibitzeneau"
+        },
+        {
+            "nom": "Trajet - Saverne - Aller",
+            "jour": "5",
+            "heure_debut": "12:55",
+            "heure_fin": "13:25",
+            "lieu": ""
+        },
+        {
+            "nom": "Trajet - Saverne - Retour",
+            "jour": "5",
+            "heure_debut": "14:30",
+            "heure_fin": "15:00",
+            "lieu": ""
+        },
+        {
+            "nom": "Gymnastique - Access 3-4",
+            "jour": "5",
+            "heure_debut": "13:30",
+            "heure_fin": "14:30",
+            "lieu": "Saverne - Gymnasme Adrien Zeller"
         }
     ]
 }
