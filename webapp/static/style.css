@@ -35,19 +35,28 @@ button{font:inherit;cursor:pointer}
 .btn-file{position:relative;display:inline-block}
 .status{font-size:.85rem;color:var(--ink-soft);min-height:1.3em;margin-top:8px}
 
-.semaine{overflow-x:auto;background:var(--field);border:1px solid var(--line);border-radius:3px;padding:12px}
-.semaine-vide{color:var(--ink-soft);font-size:.85rem;margin:0;padding:8px 0}
-.semaine-grille{display:flex;min-width:640px}
-.heures-colonne{flex:0 0 40px;position:relative}
-.heures-corps{position:relative}
-.heure-etiquette{position:absolute;left:0;transform:translateY(-50%);font-size:.7rem;color:var(--ink-soft)}
-.jour-colonne{flex:1 1 0;min-width:80px;border-left:1px solid var(--line)}
-.jour-entete{font-size:.78rem;font-weight:600;text-align:center;padding-bottom:6px;color:var(--ink)}
-.jour-corps{position:relative;background:repeating-linear-gradient(to bottom, transparent 0, transparent 65.9px, var(--paper) 66px, var(--paper) 66.6px)}
-.bloc-activite{
-  position:absolute;left:2px;right:2px;
-  background:var(--school);color:#fff;border-radius:2px;
-  padding:2px 5px;font-size:.68rem;line-height:1.25;overflow:hidden;
+.tabs-nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.tab-btn{
+  background:transparent;border:none;border-bottom:2px solid transparent;
+  padding:10px 4px;margin-right:20px;font-size:.92rem;color:var(--ink-soft);
+  cursor:pointer;
 }
-.bloc-activite b{display:block;font-weight:600}
-.bloc-activite span{opacity:.85}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn[aria-selected="true"]{color:var(--school);border-bottom-color:var(--school);font-weight:600}
+.tab-panel section:first-child{margin-top:0}
+
+#calendrier-fc{
+  background:var(--field);
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:14px;
+  font-size:.85rem;
+}
+/* Cohérence visuelle avec le reste du formulaire, sans toucher au CSS interne de FullCalendar */
+#calendrier-fc .fc{color:var(--ink)}
+#calendrier-fc .fc-button-primary{
+  background:var(--school)!important;
+  border-color:var(--school)!important;
+}
+#calendrier-fc .fc-button-primary:disabled{opacity:.5}
+#calendrier-fc .fc-toolbar-title{font-size:1rem!important}

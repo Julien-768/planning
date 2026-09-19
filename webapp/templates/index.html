@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Activités hors vacances scolaires</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.20/locales/fr.global.min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -12,47 +14,60 @@
   <p class="lede">Décrivez vos activités, choisissez votre zone : vous recevez un agenda par activité, séances de vacances déjà retirées.</p>
 
   <form method="post" action="/generer" id="form">
-    <section>
-      <h2>Zone et année</h2>
-      <div class="row">
-        <label>Zone
-          <select name="zone" id="zone">
-            {% for z in zones %}<option value="{{ z }}" {{ 'selected' if z=='B' }}>Zone {{ z }}</option>{% endfor %}
-          </select>
-        </label>
-        <label>Année scolaire
-          <select name="annee" id="annee">
-            {% for a in annees %}<option value="{{ a }}" {{ 'selected' if a==annee_defaut }}>{{ a }}</option>{% endfor %}
-          </select>
-        </label>
-      </div>
-    </section>
 
-    <section>
-      <h2>Activités</h2>
-      <div id="activites"></div>
-      <button type="button" id="ajouter" class="btn-ghost">Ajouter une activité</button>
-    </section>
+    <div class="tabs-nav" role="tablist">
+      <button type="button" class="tab-btn" data-tab="1" aria-selected="true">Zone et vacances</button>
+      <button type="button" class="tab-btn" data-tab="2">Activités</button>
+      <button type="button" class="tab-btn" data-tab="3">Aperçu</button>
+    </div>
 
-    <section>
-      <h2>Aperçu d'une semaine type</h2>
-      <p class="hint-bloc">Vue d'ensemble d'une semaine sans vacances ni jour férié — pour repérer les chevauchements entre activités.</p>
-      <div id="calendrier-semaine" class="semaine"></div>
-    </section>
+    <div class="tab-panel" id="onglet-1" role="tabpanel">
+      <section>
+        <h2>Zone et année</h2>
+        <div class="row">
+          <label>Zone
+            <select name="zone" id="zone">
+              {% for z in zones %}<option value="{{ z }}" {{ 'selected' if z=='B' }}>Zone {{ z }}</option>{% endfor %}
+            </select>
+          </label>
+          <label>Année scolaire
+            <select name="annee" id="annee">
+              {% for a in annees %}<option value="{{ a }}" {{ 'selected' if a==annee_defaut }}>{{ a }}</option>{% endfor %}
+            </select>
+          </label>
+        </div>
+      </section>
 
-    <section>
-      <h2>Vacances retirées pour cette zone</h2>
-      <table class="periodes" id="periodes"></table>
-    </section>
+      <section>
+        <h2>Vacances retirées pour cette zone</h2>
+        <table class="periodes" id="periodes"></table>
+      </section>
 
-    <section>
-      <h2>Jours fériés à retirer</h2>
-      <div id="feries" class="fer">
-        {% for f in feries %}
-        <label><input type="checkbox" name="ferie" value="{{ f.id }}" checked> {{ f.nom }} — {{ f.date }}</label>
-        {% endfor %}
-      </div>
-    </section>
+      <section>
+        <h2>Jours fériés à retirer</h2>
+        <div id="feries" class="fer">
+          {% for f in feries %}
+          <label><input type="checkbox" name="ferie" value="{{ f.id }}" checked> {{ f.nom }} — {{ f.date }}</label>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <div class="tab-panel" id="onglet-2" role="tabpanel" hidden>
+      <section>
+        <h2>Activités</h2>
+        <div id="activites"></div>
+        <button type="button" id="ajouter" class="btn-ghost">Ajouter une activité</button>
+      </section>
+    </div>
+
+    <div class="tab-panel" id="onglet-3" role="tabpanel" hidden>
+      <section>
+        <h2>Aperçu</h2>
+        <p class="hint-bloc">Calendrier des séances réelles pour l'année choisie, vacances déjà retirées — naviguez entre les vues mois, semaine et jour.</p>
+        <div id="calendrier-fc"></div>
+      </section>
+    </div>
 
     <section class="sauvegarde">
       <h2>Sauvegarde</h2>
