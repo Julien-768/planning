@@ -17,3 +17,6 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Dart / Flutter
+.dart_tool/
